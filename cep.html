@@ -1,0 +1,53 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+	<title>CEP</title>
+</head>
+<body>
+	<form>
+		<input type="text" name="cep" id="cep"/>
+		<input type="submit" value="Buscar CEP" id="enviar"/>
+	</form>
+	<div id="res">
+	</div>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){	
+		$("#enviar").click(function(){
+			//recebe valor dos campos de texto
+			var cep = document.getElementsByName("cep")[0].value.replace("-","");
+				//chama ajax
+				ajax(cep);
+		});
+	});
+	function ajax(cep){
+		//previne contra reload
+		event.preventDefault();
+		
+		$.ajax({
+		url: 'http://correiosapi.apphb.com/cep/'+cep,
+		dataType: 'jsonp',
+		crossDomain: true,
+		contentType: "application/json",
+		statusCode: {
+		200: function(data) { 
+		endereco = data;		
+		document.getElementById('res').innerHTML = "";
+		$("#res").append(
+		"CEP: "+endereco['cep']+"<br>",
+		endereco['tipoDeLogradouro']+" "+endereco['logradouro']+", "+endereco['bairro']+"<br>",
+		endereco['cidade']+", "+endereco['estado']
+		);
+		} 
+		}
+		});
+	}	
+	</script>
+	<script src="http://digitalbush.com/wp-content/uploads/2014/10/jquery.maskedinput.js"></script>
+	<script>
+	jQuery(function($){
+		 $("#cep").mask("99999-999");		
+	});
+</script>
+</html>
